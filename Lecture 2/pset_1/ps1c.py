@@ -39,11 +39,11 @@ while (front <= end):
         break
         
     elif ((current_savings - portion_down_payment) > 100):
-        end = mid - 1
+        end = mid + 1
         counter += 1
         
     else:
-        front = mid + 1
+        front = mid - 1
         counter += 1
     
     annual_salary = initial_salary

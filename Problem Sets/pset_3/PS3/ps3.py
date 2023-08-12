@@ -23,7 +23,7 @@ SCRABBLE_LETTER_VALUES = {
 # Helper code
 # (you don't need to understand this helper code)
 
-WORDLIST_FILENAME = "words.txt"
+WORDLIST_FILENAME = "Problem Sets\\pset_3\\PS3\\words.txt"
 
 def load_words():
     """
@@ -91,8 +91,16 @@ def get_word_score(word, n):
     n: int >= 0
     returns: int >= 0
     """
+    first_component = 0
+    lower_word = str.lower(word)
+    for char in lower_word:
+        first_component += SCRABBLE_LETTER_VALUES[char]
     
-    pass  # TO DO... Remove this line when you implement this function
+    second_component = 7 * len(lower_word) - 3 * (n - len(lower_word))
+    if second_component <= 1:
+        return first_component
+    
+    return first_component * second_component
 
 #
 # Make sure you understand how this function works and what it does!
@@ -133,7 +141,7 @@ def deal_hand(n):
     returns: dictionary (string -> int)
     """
     
-    hand={}
+    hand = {}
     num_vowels = int(math.ceil(n / 3))
 
     for i in range(num_vowels):
@@ -168,7 +176,18 @@ def update_hand(hand, word):
     returns: dictionary (string -> int)
     """
 
-    pass  # TO DO... Remove this line when you implement this function
+    new_hand = {}
+    new_word = str.lower(word)
+    for letter in hand.keys():
+        new_hand[letter] = hand[letter]
+        
+    for i in range(len(new_word)):
+        if new_word[i] in hand and hand[new_word[i]] >= 1:
+            new_hand[new_word[i]] -= 1
+        elif new_word[i] in hand and hand[new_word[i]] < 1:
+            new_hand[new_word[i]] = 0
+            
+    return new_hand
 
 #
 # Problem #3: Test word validity
@@ -184,8 +203,20 @@ def is_valid_word(word, hand, word_list):
     word_list: list of lowercase strings
     returns: boolean
     """
-
-    pass  # TO DO... Remove this line when you implement this function
+    new_word = str.lower(word)
+    new_hand = hand.copy()
+    if new_word not in word_list:
+        return False
+    else:
+        for i in range(len(new_word)):
+            if new_word not in hand:
+                return False
+            else:
+                new_hand[new_word[i]] -= 1
+                if new_hand[new_word[i]] < 1:
+                    return False
+            
+    return True
 
 #
 # Problem #5: Playing a hand

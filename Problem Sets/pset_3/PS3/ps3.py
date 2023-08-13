@@ -16,7 +16,7 @@ CONSONANTS = 'bcdfghjklmnpqrstvwxyz'
 HAND_SIZE = 7
 
 SCRABBLE_LETTER_VALUES = {
-    'a': 1, 'b': 3, 'c': 3, 'd': 2, 'e': 1, 'f': 4, 'g': 2, 'h': 4, 'i': 1, 'j': 8, 'k': 5, 'l': 1, 'm': 3, 'n': 1, 'o': 1, 'p': 3, 'q': 10, 'r': 1, 's': 1, 't': 1, 'u': 1, 'v': 4, 'w': 4, 'x': 8, 'y': 4, 'z': 10
+    'a': 1, 'b': 3, 'c': 3, 'd': 2, 'e': 1, 'f': 4, 'g': 2, 'h': 4, 'i': 1, 'j': 8, 'k': 5, 'l': 1, 'm': 3, 'n': 1, 'o': 1, 'p': 3, 'q': 10, 'r': 1, 's': 1, 't': 1, 'u': 1, 'v': 4, 'w': 4, 'x': 8, 'y': 4, 'z': 10, '*': 0
 }
 
 # -----------------------------------
@@ -204,29 +204,32 @@ def is_valid_word(word, hand, word_list):
     returns: boolean
     """
     new_word = word.lower()
-    new_hand = hand.copy()
     
     if '*' in new_word:
         for i in range(len(VOWELS)):
             counter_1 = 0
             final_word = new_word.replace("*", VOWELS[i])
+            new_hand_2 = hand.copy();
+            del new_hand_2['*']
+            new_hand_2[VOWELS[i]] = 1
             if final_word in word_list:
                 for letter in final_word:
-                    if letter in new_hand and new_hand[letter] > 0:
-                        new_hand[letter] -= 1
+                    if letter in new_hand_2 and new_hand_2[letter] > 0:
+                        new_hand_2[letter] -= 1
                         counter_1 += 1
             
             if counter_1 == len(final_word):
                 return True
         
     else:
+        new_hand_1 = hand.copy()
         counter_2 = 0
         if new_word not in word_list:
             return False
 
         for letter in new_word:
-            if letter in new_hand and new_hand[letter] > 0:
-                new_hand[letter] -= 1
+            if letter in new_hand_1 and new_hand_1[letter] > 0:
+                new_hand_1[letter] -= 1
                 counter_2 += 1
             else:
                 return False

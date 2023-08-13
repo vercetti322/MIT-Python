@@ -345,7 +345,6 @@ def play_hand(hand, word_list):
 # Problem #6: Playing a game
 # 
 
-
 #
 # procedure you will use to substitute a letter in a hand
 #
@@ -372,8 +371,25 @@ def substitute_hand(hand, letter):
     letter: string
     returns: dictionary (string -> int)
     """
+    if letter not in hand:
+        return hand
     
-    pass  # TO DO... Remove this line when you implement this function
+    else:
+        set = ""
+        for char in VOWELS:
+            if char != letter:
+                set += char
+                
+        for char in CONSONANTS:
+            if char != letter:
+                set += char
+    
+        freq = hand[letter]
+        del hand[letter]
+        new_letter = random.choice(set)
+        hand[new_letter] = freq
+        return hand
+
        
     
 def play_game(word_list):
@@ -406,9 +422,24 @@ def play_game(word_list):
 
     word_list: list of lowercase strings
     """
+    number = int(input("Enter the total number of hands: "))
+    total_score = 0
+    flag_substitute = 0
     
-    print("play_game not implemented.") # TO DO... Remove this line when you implement this function
-    
+    while number > 0:
+        new_hand = deal_hand(HAND_SIZE)
+        display_hand(new_hand)
+        input_if = input("Would you like to substitute a letter? ")
+        if input_if == 'yes' and flag_substitute == 0:
+            input_letter = input("Which letter would you like to replace: ")
+            new_hand = substitute_hand(new_hand, input_letter)
+            flag_substitute = 1
+        
+        total_score += play_hand(new_hand, word_list)
+        number -= 1
+        
+    print("Total score over all hands:", total_score)
+        
 
 
 #
@@ -416,6 +447,6 @@ def play_game(word_list):
 # Do not remove the "if __name__ == '__main__':" line - this code is executed
 # when the program is run directly, instead of through an import statement
 #
-# if __name__ == '__main__':
-#     word_list = load_words()
-#     play_game(word_list)
+if __name__ == '__main__':
+    word_list = load_words()
+    play_game(word_list)

@@ -3,9 +3,9 @@
 # The 6.0001 Word Game
 # Created by: Kevin Luu <luuk> and Jenna Wiens <jwiens>
 #
-# Name          : <your name>
-# Collaborators : <your collaborators>
-# Time spent    : <total time>
+# Name          : Jatin Jindal
+# Collaborators : None
+# Time spent    : 
 
 import math
 import random
@@ -142,7 +142,7 @@ def deal_hand(n):
     """
     
     hand = {}
-    num_vowels = int(math.ceil(n / 3))
+    num_vowels = int(math.ceil(n / 3)) - 1
 
     for i in range(num_vowels):
         x = random.choice(VOWELS)
@@ -151,7 +151,7 @@ def deal_hand(n):
     for i in range(num_vowels, n):    
         x = random.choice(CONSONANTS)
         hand[x] = hand.get(x, 0) + 1
-    
+    hand['*'] = 1
     return hand
 
 #
@@ -203,20 +203,39 @@ def is_valid_word(word, hand, word_list):
     word_list: list of lowercase strings
     returns: boolean
     """
-    new_word = str.lower(word)
+    new_word = word.lower()
     new_hand = hand.copy()
-    if new_word not in word_list:
-        return False
-    else:
-        for i in range(len(new_word)):
-            if new_word not in hand:
-                return False
-            else:
-                new_hand[new_word[i]] -= 1
-                if new_hand[new_word[i]] < 1:
-                    return False
+    
+    if '*' in new_word:
+        for i in range(len(VOWELS)):
+            counter_1 = 0
+            final_word = new_word.replace("*", VOWELS[i])
+            if final_word in word_list:
+                for letter in final_word:
+                    if letter in new_hand and new_hand[letter] > 0:
+                        new_hand[letter] -= 1
+                        counter_1 += 1
             
-    return True
+            if counter_1 == len(final_word):
+                return True
+        
+    else:
+        counter_2 = 0
+        if new_word not in word_list:
+            return False
+
+        for letter in new_word:
+            if letter in new_hand and new_hand[letter] > 0:
+                new_hand[letter] -= 1
+                counter_2 += 1
+            else:
+                return False
+
+        if counter_2 == len(new_word):
+            return True
+        
+    return False
+                
 
 #
 # Problem #5: Playing a hand
@@ -229,7 +248,7 @@ def calculate_handlen(hand):
     returns: integer
     """
     
-    pass  # TO DO... Remove this line when you implement this function
+    
 
 def play_hand(hand, word_list):
 
@@ -371,6 +390,6 @@ def play_game(word_list):
 # Do not remove the "if __name__ == '__main__':" line - this code is executed
 # when the program is run directly, instead of through an import statement
 #
-if __name__ == '__main__':
-    word_list = load_words()
-    play_game(word_list)
+# if __name__ == '__main__':
+#     word_list = load_words()
+#     play_game(word_list)

@@ -250,6 +250,11 @@ def calculate_handlen(hand):
     hand: dictionary (string-> int)
     returns: integer
     """
+    ans = 0
+    for i in hand.keys():
+        ans += hand[i]
+        
+    return ans
     
     
 

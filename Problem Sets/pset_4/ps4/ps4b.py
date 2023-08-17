@@ -228,8 +228,24 @@ class CiphertextMessage(Message):
         Returns: a tuple of the best shift value used to decrypt the message
         and the decrypted message text using that shift value
         '''
+        return_message = ""
+        final_shift = 0
+        max_counter = 0
         
-                
+        for shift in range(0, 26):
+            counter = 0
+            new_message = self.apply_shift(shift)
+            list_words = new_message.split(' ')
+            for word in list_words:
+                if is_word(self.get_valid_words(), word) == True:
+                    counter += 1
+            if max_counter < counter:
+                max_counter = counter
+                final_shift = shift
+        
+        return_message += self.apply_shift(final_shift)
+        return final_shift, return_message
+        
 
 if __name__ == '__main__':
 
@@ -237,14 +253,12 @@ if __name__ == '__main__':
 #    plaintext = PlaintextMessage('hello', 2)
 #    print('Expected Output: jgnnq')
 #    print('Actual Output:', plaintext.get_message_text_encrypted())
-#
-#    #Example test case (CiphertextMessage)
-#    ciphertext = CiphertextMessage('jgnnq')
-#    print('Expected Output:', (24, 'hello'))
-#    print('Actual Output:', ciphertext.decrypt_message())
+
+   #Example test case (CiphertextMessage)
+   ciphertext = CiphertextMessage('jgnnq')
+   print('Expected Output:', (24, 'hello'))
+   print('Actual Output:', ciphertext.decrypt_message())
 
     #TODO: WRITE YOUR TEST CASES HERE
 
     #TODO: best shift value and unencrypted story 
-    
-    pass
